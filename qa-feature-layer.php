@@ -7,10 +7,10 @@ class qa_html_theme_layer extends qa_html_theme_base {
 		global $qa_request;
 		$request = qa_request_parts();
 		$request = $request[0];
+		$categoryslugs = qa_request_parts(1);
 		qa_html_theme_base::doctype();
 		if((strcmp($request,'questions') == 0) || (strcmp($request,'unanswered') == 0)) {
 			$request='questions';
-			$qa_request = 'featured';
 			if (isset($categoryslugs))
 				foreach ($categoryslugs as $slug)
 					$request.='/'.$slug;
