@@ -24,6 +24,12 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 		$sometitle = $categoryid != null ? qa_lang_html_sub('featured_lang/featured_qs_in_x', $categorytitlehtml) : qa_lang_html('featured_lang/featured_qs_title');
 		$nonetitle = $categoryid != null ? qa_lang_html_sub('featured_lang/nofeatured_qs_in_x', $categorytitlehtml) : qa_lang_html('featured_lang/nofeatured_qs_title');
 		$feedpathprefix =  null;
+		$tcount=count($questions);
+		if($tcount < $pagesize)
+			$count = $start+$tcount;
+		if($categoryid){
+			
+		}
 	}
 
 	return qa_q_list_page_content_base($questions, $pagesize, $start, $count, $sometitle, $nonetitle,
