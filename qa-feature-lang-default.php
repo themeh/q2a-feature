@@ -25,7 +25,7 @@ return array(
 	'feature' => 'Feature',
 	'feature_pop' => 'Feature this question',
 	'unfeature' => 'Un feature',
-	'unfeature_pop' => 'Remove this question from feature list',
+	'unfeature_pop' => 'Remove this question from featured list',
 	'featured_qs_in_x' => 'Featured Questions in ^',
 	'featured_qs_title' => 'Featured Questions',
 	'nofeatured_qs_in_x' => 'No Featured Questions in ^',

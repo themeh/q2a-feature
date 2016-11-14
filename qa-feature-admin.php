@@ -41,7 +41,7 @@ class qa_feature_admin {
 		$fields = array();
 		$fields[] = array(
 
-				'label' => 'User Level for Featuring',
+				'label' => 'Min. User Level Required for Featuring',
 				'tags' => 'name="qa_featured_questions_level"',
 				'value' => @$showoptions[qa_opt('qa_featured_questions_level')],
 				'type' => 'select',
