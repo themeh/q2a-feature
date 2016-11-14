@@ -6,7 +6,7 @@ function qa_db_posts_basic_selectspec($voteuserid=null, $full=false, $user=true)
 	if(($request ===  'questions' || $request ===  'unanswered') && (qa_get('sort') == 'featured') )
 	{
 		$res = qa_db_posts_basic_selectspec_base($voteuserid, $full, $user);
-		$res['source'] .= " join ^postmetas gf on ^posts.postid = gf.postid and gf.title like 'featured'";
+		$res['source'] .= " join ^postmetas gfeat on ^posts.postid = gfeat.postid and gfeat.title like 'featured'";
 		return $res;
 	}
 	return  qa_db_posts_basic_selectspec_base($voteuserid, $full, $user);
