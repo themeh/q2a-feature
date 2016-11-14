@@ -3,6 +3,8 @@
 	"description": "This plugin allows to feature/unfeature questions and adds them to Featured list in Question Pages of Q2A",
 	"version": "1.0",
 	"date": "2016-11-14",
+	"uri": "https://github.com/arjunsuresh/q2a-feature",
+	"update_uri": "https://raw.githubusercontent.com/arjunsuresh/q2a-feature/master/metadata.json",
 	"author": "Arjun Suresh",
 	"author_uri": "http://gateoverflow.in/user/Arjun",
 	"license": "GPLv2",
