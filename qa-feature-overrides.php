@@ -24,21 +24,27 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 		$sometitle = $categoryid != null ? qa_lang_html_sub('featured_lang/featured_qs_in_x', $categorytitlehtml) : qa_lang_html('featured_lang/featured_qs_title');
 		$nonetitle = $categoryid != null ? qa_lang_html_sub('featured_lang/nofeatured_qs_in_x', $categorytitlehtml) : qa_lang_html('featured_lang/nofeatured_qs_title');
 		$feedpathprefix =  null;
-		$tcount=count($questions);
-		if($tcount < $pagesize)
-			$count = $start+$tcount;
-		if($categoryid){
-			
+		if(!$categoryid){
+			$count=qa_opt('feeatured_qcount');
+		}
+		else{
+			$tcount=count($questions);
+			if($tcount < $pagesize)
+				$count = $start+$tcount;
 		}
 	}
 
 	return qa_q_list_page_content_base($questions, $pagesize, $start, $count, $sometitle, $nonetitle,
 			$navcategories, $categoryid, $categoryqcount, $categorypathprefix, $feedpathprefix, $suggest,
 			$pagelinkparams, $categoryparams, $dummy);
-
 }
 
-
+function updatefeaturedcount()
+{
+	$query = qa_db_query_sub("select count(*) from ^postmetas where title like 'featured'");
+	$count = qa_db_read_one_value($query);
+	qa_opt('featured_qcount', $count);
+}
 
 function qa_check_page_clicks()
 {
@@ -52,12 +58,14 @@ function qa_check_page_clicks()
 			{
 				$postid = $_POST['feature-button'];	
 				qa_db_postmeta_set($postid, "featured", "1");
+				updatefeaturedcount();
 				qa_redirect( qa_request(), $_GET );
 			}
 			if(isset($_POST['unfeature-button'])  )
 			{
 				$postid = $_POST['unfeature-button'];	
 				qa_db_postmeta_clear($postid, "featured");
+				updatefeaturedcount();
 				qa_redirect( qa_request(), $_GET );
 			}
 		}
