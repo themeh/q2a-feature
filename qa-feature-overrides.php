@@ -28,9 +28,7 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 			$count=qa_opt('feeatured_qcount');
 		}
 		else{
-			$tcount=count($questions);
-			if($tcount < $pagesize)
-				$count = $start+$tcount;
+			$count = qa_db_categorymeta_get($categoryid, 'fcount');			
 		}
 	}
 
@@ -38,13 +36,46 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 			$navcategories, $categoryid, $categoryqcount, $categorypathprefix, $feedpathprefix, $suggest,
 			$pagelinkparams, $categoryparams, $dummy);
 }
+function category_path_fqcount_update($postid)
+{
+	$pathq = "select categoryid, catidpath1, catidpath2, catidpath3 from ^posts where postid = #";
+	$result = qa_db_query_sub($pathq, $postid);
+	$path = qa_db_read_one_assoc($result);
+	ifcategory_fqcount_update($path['categoryid']); // requires QA_CATEGORY_DEPTH=4
+	ifcategory_fqcount_update($path['catidpath1']);
+	ifcategory_fqcount_update($path['catidpath2']);
+	ifcategory_fqcount_update($path['catidpath3']);
+}
 
-function updatefeaturedcount()
+function updatefeaturedcount($postid)
 {
 	$query = qa_db_query_sub("select count(*) from ^postmetas where title like 'featured'");
 	$count = qa_db_read_one_value($query);
 	qa_opt('featured_qcount', $count);
+	category_path_fqcount_update($postid);
 }
+
+
+
+function ifcategory_fqcount_update($categoryid)
+{
+	if (isset($categoryid)) {
+		// This seemed like the most sensible approach which avoids explicitly calculating the category's depth in the hierarchy
+		$filter = " and postid in (select postid from ^postmetas where title like 'featured')";
+		$query = qa_db_query_sub(
+				"select GREATEST( (SELECT COUNT(*) FROM ^posts WHERE categoryid=# AND type='Q'".$filter."), (SELECT COUNT(*) FROM ^posts WHERE catidpath1=# AND type='Q'".$filter."), (SELECT COUNT(*) FROM ^posts WHERE catidpath2=# AND type='Q'".$filter."), (SELECT COUNT(*) FROM ^posts WHERE catidpath3=# AND type='Q'".$filter.") ) ",
+				$categoryid, $categoryid, $categoryid, $categoryid
+				); // requires QA_CATEGORY_DEPTH=4
+		$count = qa_db_read_one_value($query);
+
+		qa_db_categorymeta_set($categoryid, 'fcount', $count);
+	}
+}
+
+
+
+
+
 
 function qa_check_page_clicks()
 {
@@ -58,14 +89,14 @@ function qa_check_page_clicks()
 			{
 				$postid = $_POST['feature-button'];	
 				qa_db_postmeta_set($postid, "featured", "1");
-				updatefeaturedcount();
+				updatefeaturedcount($postid);
 				qa_redirect( qa_request(), $_GET );
 			}
 			if(isset($_POST['unfeature-button'])  )
 			{
 				$postid = $_POST['unfeature-button'];	
 				qa_db_postmeta_clear($postid, "featured");
-				updatefeaturedcount();
+				updatefeaturedcount($postid);
 				qa_redirect( qa_request(), $_GET );
 			}
 		}
