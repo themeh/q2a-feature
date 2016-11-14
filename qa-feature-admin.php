@@ -4,6 +4,8 @@ class qa_feature_admin {
 	function option_default($option) {
 
 		switch($option) {
+			case 'qa_featured_questions_level': 
+				return QA_USER_LEVEL_MODERATOR;
 			default:
 				return null;				
 		}
