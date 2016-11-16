@@ -26,7 +26,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
 
 	public function q_view_buttons($q_view)
 	{
-		if (!empty($q_view['form'])) {
+		if (($this->template == 'question') && (!empty($q_view['form']))) {
 			$user_level = qa_get_logged_in_level();
 			if($user_level >=  qa_opt('qa_featured_questions_level') )
 			{
