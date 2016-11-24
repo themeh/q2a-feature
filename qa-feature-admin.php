@@ -6,6 +6,8 @@ class qa_feature_admin {
 		switch($option) {
 			case 'qa_featured_questions_level': 
 				return QA_USER_LEVEL_MODERATOR;
+			case 'qa_featured_css': 
+				return '.qa-q-read { background-color: palegreen;}';
 			default:
 				return null;				
 		}
@@ -47,6 +49,7 @@ class qa_feature_admin {
 		if (qa_clicked('qa_featured_questions_save')) {
 			qa_opt('qa_featured_questions_level',qa_post_text('qa_featured_questions_level'));
 			qa_opt('qa_featured_enable_user_reads',(bool)qa_post_text('qa_featured_enable_user_reads'));
+			qa_opt('qa_featured_css',qa_post_text('qa_featured_css'));
 			$ok = qa_lang('admin/options_saved');
 		}
 		$showoptions = array(
@@ -72,6 +75,12 @@ class qa_feature_admin {
 				'tags' => 'name="qa_featured_enable_user_reads"',
 				'value' => qa_opt('qa_featured_enable_user_reads'),
 				'type' => 'checkbox',
+				);
+		$fields[] = array(
+				'label' => 'CSS for marking Read Questions in Question Lists',
+				'tags' => 'name="qa_featured_css"',
+				'value' => qa_opt('qa_featured_css'),
+				'type' => 'textarea',
 				);
 
 		return array(           

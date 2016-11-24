@@ -23,6 +23,35 @@ class qa_html_theme_layer extends qa_html_theme_base {
 		}
 
 	}
+	public function head_css()
+	{
+		qa_html_theme_base::head_css();
+		if(qa_opt("qa_featured_enable_user_reads")){
+			$this->output('<style type="text/css">'.qa_opt('qa_featured_css').' </style>');
+		}
+
+	}
+	
+	public function q_item_title($q_item)
+        {
+		if(qa_opt("qa_featured_enable_user_reads")){
+		$this->output(
+                        '<div class="qa-q-item-title');
+		if(isset($q_item['raw']['readid']))
+		$this->output(' qa-q-read');
+
+		$this->output('">',
+                        '<a href="'.$q_item['url'].'">'.$q_item['title'].'</a>',
+                        // add closed note in title
+                        empty($q_item['closed']['state']) ? '' : ' ['.$q_item['closed']['state'].']',
+                        '</div>'
+                );
+		}
+		else 
+			qa_html_theme_base::q_item_title($q_item);
+        }
+
+
 
 	public function q_view_buttons($q_view)
 	{
@@ -30,31 +59,31 @@ class qa_html_theme_layer extends qa_html_theme_base {
 			$user_level = qa_get_logged_in_level();
 			if($user_level > 0)
 			{
-			$postid=$q_view['raw']['postid'];
-			if(qa_opt("qa_featured_enable_user_reads")){
-				$query = "select postid from ^userreads where userid = # and postid = #";
-				$result = qa_db_query_sub($query, qa_get_logged_in_userid(), $postid);
+				$postid=$q_view['raw']['postid'];
+				if(qa_opt("qa_featured_enable_user_reads")){
+					$query = "select postid from ^userreads where userid = # and postid = #";
+					$result = qa_db_query_sub($query, qa_get_logged_in_userid(), $postid);
 					$id = qa_db_read_one_value($result, true);
-				if(!$id)
-				//if(qa_db_postmeta_get($postid, "featured") == null)
+					if(!$id)
+						//if(qa_db_postmeta_get($postid, "featured") == null)
+					{
+						$q_view['form']['buttons'][] = array("tags" => "name='read-button' value='$postid' title='".qa_lang_html('featured_lang/read_pop')."'", "label" => qa_lang_html('featured_lang/read')); 
+					}
+					else{
+						$q_view['form']['buttons'][] = array("tags" => "name='unread-button' value='$postid' title='".qa_lang_html('featured_lang/unread_pop')."'", "label" => qa_lang_html('featured_lang/unread')); 
+					}
+				}
+				if($user_level >=  qa_opt('qa_featured_questions_level') )
 				{
-					$q_view['form']['buttons'][] = array("tags" => "name='read-button' value='$postid' title='".qa_lang_html('featured_lang/read_pop')."'", "label" => qa_lang_html('featured_lang/read')); 
-				}
-				else{
-					$q_view['form']['buttons'][] = array("tags" => "name='unread-button' value='$postid' title='".qa_lang_html('featured_lang/unread_pop')."'", "label" => qa_lang_html('featured_lang/unread')); 
-				}
-			}
-			if($user_level >=  qa_opt('qa_featured_questions_level') )
-			{
 
-				if(qa_db_postmeta_get($postid, "featured") == null)
-				{
-					$q_view['form']['buttons'][] = array("tags" => "name='feature-button' value='$postid' title='".qa_lang_html('featured_lang/feature_pop')."'", "label" => qa_lang_html('featured_lang/feature')); 
+					if(qa_db_postmeta_get($postid, "featured") == null)
+					{
+						$q_view['form']['buttons'][] = array("tags" => "name='feature-button' value='$postid' title='".qa_lang_html('featured_lang/feature_pop')."'", "label" => qa_lang_html('featured_lang/feature')); 
+					}
+					else{
+						$q_view['form']['buttons'][] = array("tags" => "name='unfeature-button' value='$postid' title='".qa_lang_html('featured_lang/unfeature_pop')."'", "label" => qa_lang_html('featured_lang/unfeature')); 
+					}
 				}
-				else{
-					$q_view['form']['buttons'][] = array("tags" => "name='unfeature-button' value='$postid' title='".qa_lang_html('featured_lang/unfeature_pop')."'", "label" => qa_lang_html('featured_lang/unfeature')); 
-				}
-			}
 			}
 
 		}
