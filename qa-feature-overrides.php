@@ -10,7 +10,7 @@ function qa_db_posts_basic_selectspec($voteuserid=null, $full=false, $user=true)
 	}
 	if(($qa_template ===  'questions' || $qa_template ===  'unanswered' || $qa_template === 'activity') )
 	{
-		if(qa_opt('qa_featured_enable_user_reads') && qa_get_logged_in_level()>=  0)
+		if(qa_opt('qa_featured_enable_user_reads') && qa_get_logged_in_level()>  0)
 		{
 			if(!$res){
 				$res = qa_db_posts_basic_selectspec_base($voteuserid, $full, $user);
