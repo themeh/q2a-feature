@@ -72,6 +72,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
 						$q_view['form']['buttons'][] = array("tags" => "name='unread-button' value='$postid' title='".qa_lang_html('featured_lang/unread_pop')."'", "label" => qa_lang_html('featured_lang/unread')); 
 					}
 				}
+				$user_level = qa_get_logged_in_level();
 				if($user_level >=  qa_opt('qa_featured_questions_level') )
 				{
 
