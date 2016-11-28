@@ -114,7 +114,7 @@ function qa_check_page_clicks()
 				qa_redirect( qa_request(), $_GET );
 			}
 		}
-		if(qa_opt('qa_featured_enable_user_reads') && qa_get_logged_in_level()>=  0)
+		if(qa_opt('qa_featured_enable_user_reads') && qa_is_logged_in())
 		{
 			if(isset($_POST['read-button'])  )
 			{
