@@ -54,11 +54,13 @@ function category_path_fqcount_update($postid)
 {
 	$pathq = "select categoryid, catidpath1, catidpath2, catidpath3 from ^posts where postid = #";
 	$result = qa_db_query_sub($pathq, $postid);
-	$path = qa_db_read_one_assoc($result);
+	$path = qa_db_read_one_assoc($result, true);
+	if($path){
 	ifcategory_fqcount_update($path['categoryid']); // requires QA_CATEGORY_DEPTH=4
 	ifcategory_fqcount_update($path['catidpath1']);
 	ifcategory_fqcount_update($path['catidpath2']);
 	ifcategory_fqcount_update($path['catidpath3']);
+	}
 }
 
 function updatefeaturedcount($postid)
