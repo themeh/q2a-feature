@@ -97,7 +97,7 @@ function qa_check_page_clicks()
 {
 	global $qa_page_error_html;
 	global  $qa_request;
-
+	require_once QA_INCLUDE_DIR."db/metas.php";
 	if ( qa_is_http_post() ) {
 		if(qa_get_logged_in_level()>=  qa_opt('qa_featured_questions_level'))
 		{
