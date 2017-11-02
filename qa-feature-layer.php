@@ -75,7 +75,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
 				$user_level = qa_get_logged_in_level();
 				if($user_level >=  qa_opt('qa_featured_questions_level') )
 				{
-
+require_once QA_INCLUDE_DIR.'db/metas.php';
 					if(qa_db_postmeta_get($postid, "featured") == null)
 					{
 						$q_view['form']['buttons'][] = array("tags" => "name='feature-button' value='$postid' title='".qa_lang_html('featured_lang/feature_pop')."'", "label" => qa_lang_html('featured_lang/feature')); 
