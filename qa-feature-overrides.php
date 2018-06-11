@@ -99,23 +99,30 @@ function qa_check_page_clicks()
 	global  $qa_request;
 	require_once QA_INCLUDE_DIR."db/metas.php";
 	if ( qa_is_http_post() ) {
-		if(qa_get_logged_in_level()>=  qa_opt('qa_featured_questions_level'))
+		
+		require_once QA_INCLUDE_DIR.'app/posts.php';
+		
+		if(isset($_POST['feature-button'])  )
 		{
-			if(isset($_POST['feature-button'])  )
-			{
-				$postid = $_POST['feature-button'];	
+			$postid = $_POST['feature-button'];	
+			$user_level = qa_user_level_for_post(qa_post_get_full($postid));
+			if($user_level  >=  qa_opt('qa_featured_questions_level')){
 				qa_db_postmeta_set($postid, "featured", "1");
 				updatefeaturedcount($postid);
 				qa_redirect( qa_request(), $_GET );
 			}
-			if(isset($_POST['unfeature-button'])  )
-			{
-				$postid = $_POST['unfeature-button'];	
+		}
+		if(isset($_POST['unfeature-button'])  )
+		{
+			$postid = $_POST['unfeature-button'];	
+			$user_level = qa_user_level_for_post(qa_post_get_full($postid));
+			if($user_level  >=  qa_opt('qa_featured_questions_level')){
 				qa_db_postmeta_clear($postid, "featured");
 				updatefeaturedcount($postid);
 				qa_redirect( qa_request(), $_GET );
-			}
+			}				
 		}
+		
 		if(qa_opt('qa_featured_enable_user_reads') && qa_is_logged_in())
 		{
 			if(isset($_POST['read-button'])  )

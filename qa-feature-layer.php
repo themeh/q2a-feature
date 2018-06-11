@@ -73,6 +73,11 @@ class qa_html_theme_layer extends qa_html_theme_base {
 					}
 				}
 				$user_level = qa_get_logged_in_level();
+				// error_log($user_level);
+				require_once QA_INCLUDE_DIR.'app/posts.php';
+				$user_level = qa_user_level_for_post(qa_post_get_full($postid));
+				// error_log($user_level);
+			   
 				if($user_level >=  qa_opt('qa_featured_questions_level') )
 				{
 require_once QA_INCLUDE_DIR.'db/metas.php';
